@@ -13,4 +13,9 @@
         "-DCMAKE_BUILD_TYPE=Debug",
         "-DCMAKE_INSTALL_PREFIX=./install"
     ],
+    "github.copilot.enable": {
+        "*": false,
+        "cpp": false,
+        "c": false,
+    }
 }

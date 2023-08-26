@@ -3,10 +3,10 @@
 #include <string.h>
 
 // 双链表节点定义
-typedef struct DoubleNode {
+typedef struct DoublyNode {
     void *data;
-    struct DoubleNode *prev;
-    struct DoubleNode *next;
+    struct DoublyNode *prev;
+    struct DoublyNode *next;
 } DoubleNode;
 
 // 双链表结构定义
@@ -26,6 +26,19 @@ DoublyLinkedList *createDoublyLinkedList(int elementSize)
     list->tail = NULL;
     list->elementSize = elementSize;
     return list;
+}
+
+// 释放双链表内存
+void destroyDoublyLinkedList(DoublyLinkedList *list)
+{
+    DoubleNode *current = list->head;
+    while (current) {
+        DoubleNode *next = current->next;
+        free(current->data);
+        free(current);
+        current = next;
+    }
+    free(list);
 }
 
 // 在双链表尾部添加一个新元素
@@ -106,19 +119,6 @@ int removeDoublyLinkedList(DoublyLinkedList *list, int pos)
     free(current->data);
     free(current);
     return 0;
-}
-
-// 释放双链表内存
-void destroyDoublyLinkedList(DoublyLinkedList *list)
-{
-    DoubleNode *current = list->head;
-    while (current) {
-        DoubleNode *next = current->next;
-        free(current->data);
-        free(current);
-        current = next;
-    }
-    free(list);
 }
 
 // 主函数示例
