@@ -1,21 +1,10 @@
-#include <stddef.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
-typedef struct DoublyNode {
-    void *element;
-    struct DoublyNode *prev;
-    struct DoublyNode *next;
-} DoublyNode;
+#include "doublyLinkedList.h"
 
-typedef struct {
-    DoublyNode *head;
-    DoublyNode *tail;
-    size_t elementSize;
-} DoublyLinkedList;
-
-DoublyNode *createDoublyNode(const void *element, size_t elementSize)
+static DoublyNode *createDoublyNode(const void *element, size_t elementSize)
 {
     DoublyNode *node = malloc(sizeof(DoublyNode));
     if (!node)
@@ -35,8 +24,8 @@ DoublyNode *createDoublyNode(const void *element, size_t elementSize)
     return node;
 }
 
-DoublyNode *createAndInsertDoublyNode(const void *element, size_t elementSize, DoublyNode *prev,
-                                      DoublyNode *next)
+static DoublyNode *createAndInsertDoublyNode(const void *element, size_t elementSize,
+                                             DoublyNode *prev, DoublyNode *next)
 {
     DoublyNode *newNode = createDoublyNode(element, elementSize);
     if (!newNode)
@@ -135,6 +124,28 @@ int prependDoublyLinkedList(DoublyLinkedList *list, const void *element)
     return insertDoublyLinkedList(list, 0, element);
 }
 
+int rotateTailWithNewData(DoublyLinkedList *list, const void *element)
+{
+    if (!list)
+        return -1;
+    if (!list->head || !list->tail)
+        return -1;
+
+    if (list->tail != list->head) {
+        list->head->prev = list->tail;
+        list->tail->next = list->head;
+        list->head = list->tail;
+
+        list->tail->prev->next = NULL;
+        list->tail = list->tail->prev;
+        list->head->prev = NULL;
+    }
+
+    memcpy(list->head->element, element, list->elementSize);
+
+    return 0;
+}
+
 int deleteElementDoublyLinkedList(DoublyLinkedList *list, int pos)
 {
     if (!list)
@@ -159,6 +170,32 @@ int deleteElementDoublyLinkedList(DoublyLinkedList *list, int pos)
     free(current);
 
     return 0;
+}
+
+typedef int (*match_method)(const void *listValue, const void *compareValue);
+
+int matchElementDoublyLinkedList(DoublyLinkedList *list, match_method match,
+                                 const void *compareValue, int *pos, void **listValue)
+{
+    int res;
+    if (!list)
+        return -1;
+
+    int idx = 0;
+    DoublyNode *current = list->head;
+    while (current) {
+        res = match(current->element, compareValue);
+        if (res == 0) {
+            if (pos)
+                *pos = idx;
+            if (listValue)
+                *listValue = current->element;
+            return 0;
+        }
+        current = current->next;
+        ++idx;
+    }
+    return 1;
 }
 
 int getElementDoublyLinkedList(DoublyLinkedList *list, int pos, void **element)
@@ -191,7 +228,17 @@ void printDoublyLinkedList(DoublyLinkedList *list)
     printf("\n");
 }
 
-int main()
+static int match_integer(const void *listValue, const void *compareValue)
+{
+    int *left = (int *)listValue;
+    int *right = (int *)compareValue;
+    if (*left == *right)
+        return 0;
+    else
+        return -1;
+}
+
+int dobulyLinkedListTest(void)
 {
     int a = 10, b = 15, c = 20, d = 101, e = 102, f = 103;
 
@@ -235,5 +282,58 @@ int main()
 
     getElementDoublyLinkedList(list, -5, (void **)&p1);
     printf("*p1 = %d\n", *p1);
+
+    int pos;
+    int compareValue = 20;
+    int *listvalue;
+    int ret =
+        matchElementDoublyLinkedList(list, match_integer, &compareValue, &pos, (void **)&listvalue);
+    if (ret != 0 && ret != 1) {
+        printf("match error!");
+        return -1;
+    }
+    if (ret == 0) {
+        printf("pos %d, listvalue = %d\n", pos, *listvalue);
+    } else {
+        printf("doesn't match.\n");
+    }
+
+    compareValue = 0;
+    ret =
+        matchElementDoublyLinkedList(list, match_integer, &compareValue, &pos, (void **)&listvalue);
+    if (ret != 0 && ret != 1) {
+        printf("match error!");
+        return -1;
+    }
+    if (ret == 0) {
+        printf("pos %d, listvalue = %d\n", pos, *listvalue);
+    } else {
+        printf("doesn't match.\n");
+    }
+
+    printDoublyLinkedList(list);
+
+    int g = 6000, h = 7000;
+    rotateTailWithNewData(list, &g);
+    rotateTailWithNewData(list, &h);
+    printDoublyLinkedList(list);
+
+    deleteElementDoublyLinkedList(list, 0);
+    deleteElementDoublyLinkedList(list, 0);
+    deleteElementDoublyLinkedList(list, -1);
+    deleteElementDoublyLinkedList(list, -2);
+    printDoublyLinkedList(list);
+
+    int i = 8000;
+    rotateTailWithNewData(list, &g);
+    printDoublyLinkedList(list);
+
+    prependDoublyLinkedList(list, &i);
+    printDoublyLinkedList(list);
+
+    int j = 9000;
+    rotateTailWithNewData(list, &j);
+    printDoublyLinkedList(list);
+
     return 0;
 }

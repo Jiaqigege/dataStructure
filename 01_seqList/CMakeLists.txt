@@ -1,2 +1,1 @@
-
 add_executable(seqList seqList.c)
