@@ -1,0 +1,1 @@
+add_executable(bestFitMM main.c bestFitMM.c)
