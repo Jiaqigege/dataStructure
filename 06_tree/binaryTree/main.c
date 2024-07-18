@@ -4,7 +4,7 @@
 
 void *printInteger(BinTreeNode *node)
 {
-    printf("%d ", *(int *)node->element);
+    printf("%d \n", *(int *)node->element);
     return NULL;
 }
 
