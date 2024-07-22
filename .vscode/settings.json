@@ -1,21 +1,21 @@
 {
-    "C_Cpp.default.intelliSenseMode": "linux-gcc-x64",
-    "C_Cpp.intelliSenseEngine": "disabled",
-    "clangd.path": "/usr/bin/clangd",
-    "clangd.arguments": [
-        "--log=verbose",
-        "--query-driver=/usr/bin/gcc,/usr/bin/g++",
-        "--compile-commands-dir=${workspaceFolder}/build"
-    ],
-    "cmake.buildDirectory": "${workspaceFolder}/build",
-    "cmake.configureArgs": [
-        "-DCMAKE_EXPORT_COMPILE_COMMANDS=ON",
-        "-DCMAKE_BUILD_TYPE=Debug",
-        "-DCMAKE_INSTALL_PREFIX=./install"
-    ],
-    "github.copilot.enable": {
-        "*": false,
-        "cpp": false,
-        "c": false,
-    }
+	"C_Cpp.default.intelliSenseMode": "linux-gcc-x64",
+	"C_Cpp.intelliSenseEngine": "disabled",
+	"clangd.path": "/usr/bin/clangd",
+	"clangd.arguments": [
+		"--log=verbose",
+		"--query-driver=/usr/bin/gcc,/usr/bin/g++,/usr/bin/cc",
+		"--compile-commands-dir=${workspaceFolder}/build"
+	],
+	"cmake.buildDirectory": "${workspaceFolder}/build",
+	"cmake.configureArgs": [
+		"-DCMAKE_EXPORT_COMPILE_COMMANDS=ON",
+		"-DCMAKE_BUILD_TYPE=Debug",
+		"-DCMAKE_INSTALL_PREFIX=./install"
+	],
+	"github.copilot.enable": {
+		"*": false,
+		"cpp": false,
+		"c": false,
+	}
 }

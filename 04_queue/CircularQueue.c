@@ -1,3 +1,4 @@
+
 #include <stdbool.h>
 #include <stdint.h>
 #include <stdio.h>
@@ -27,12 +28,12 @@ void destroyCircularQueue(CircularQ *q)
     free(q);
 }
 
-bool isEmpty(CircularQ *q)
+static bool isEmpty(CircularQ *q)
 {
     return q->front == q->rear;
 }
 
-bool isFull(CircularQ *q)
+static bool isFull(CircularQ *q)
 {
     return (q->front + 1) % q->size == q->rear;
 }
