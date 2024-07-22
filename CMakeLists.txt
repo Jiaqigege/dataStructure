@@ -17,5 +17,6 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 
 add_subdirectory(01_seqList) 
-add_subdirectory(02_linkList) 
+add_subdirectory(02_linkList)
+add_subdirectory(04_queue)
 add_subdirectory(06_tree)
