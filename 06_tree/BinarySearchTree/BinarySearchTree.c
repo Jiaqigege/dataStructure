@@ -84,7 +84,7 @@ BSTNode *insert(BSTNode *mid, void *payload, bool (*left_before)(void *l, void *
 BSTNode *bfs_queue[BFS_QUEUE_SIZE] = {NULL};
 
 // bfs基于queue
-void bfs(BSTNode *root, void (*opera)(void *payload))
+void bfs_traversal(BSTNode *root, void (*opera)(void *payload))
 {
     CircularQ q;
     q.front = q.rear = 0;
@@ -103,12 +103,39 @@ void bfs(BSTNode *root, void (*opera)(void *payload))
     }
 }
 
+void preorder_traversal(BSTNode *root, void (*opera)(void *payload))
+{
+    if (root) {
+        opera(root->payload);
+        preorder_traversal(root->l, opera);
+        preorder_traversal(root->r, opera);
+    }
+}
+
+void inorder_traversal(BSTNode *root, void (*opera)(void *payload))
+{
+    if (root) {
+        inorder_traversal(root->l, opera);
+        opera(root->payload);
+        inorder_traversal(root->r, opera);
+    }
+}
+
+void postorder_traversal(BSTNode *root, void (*opera)(void *payload))
+{
+    if (root) {
+        postorder_traversal(root->l, opera);
+        postorder_traversal(root->r, opera);
+        opera(root->payload);
+    }
+}
+
 bool left_before(void *l, void *r)
 {
     return *(int *)l < *(int *)r;
 }
 
-void operation(void *payload)
+void print_method(void *payload)
 {
     printf("val: %d\n", *(int *)payload);
 }
@@ -117,10 +144,17 @@ void operation(void *payload)
 int main(int argc, char *argv[])
 {
     BSTNode *root = NULL;
-    int arr[] = {3, 5, 1, 4, 7, 10, 12, 2};
+    int arr[] = {3, 5, 1, 4, 7, 0, 10, 9, 12, 2};
     for (int i = 0; i < ARRAY_SIZE(arr); ++i)
         root = insert(root, (void *)&arr[i], left_before);
 
-    bfs(root, operation);
+    printf("- - - - - bfs - - - - -\n");
+    bfs_traversal(root, print_method);
+    printf("- - - - - preorder - - - - -\n");
+    preorder_traversal(root, print_method);
+    printf("- - - - - inorder - - - - -\n");
+    inorder_traversal(root, print_method);
+    printf("- - - - - postorder - - - - -\n");
+    postorder_traversal(root, print_method);
     return 0;
 }
