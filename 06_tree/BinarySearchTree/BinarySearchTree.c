@@ -80,9 +80,6 @@ BSTNode *insert(BSTNode *mid, void *payload, bool (*left_before)(void *l, void *
     return mid; // 最外层返回rootNode
 }
 
-#define BFS_QUEUE_SIZE
-BSTNode *bfs_queue[BFS_QUEUE_SIZE] = {NULL};
-
 // bfs基于queue
 void bfs_traversal(BSTNode *root, void (*opera)(void *payload))
 {
