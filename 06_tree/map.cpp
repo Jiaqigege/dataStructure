@@ -19,6 +19,8 @@
 #include <utility>
 #include <vector>
 
+#define BASIC_FUNCTION
+
 /**
  * An AVLTree-based map implementation
  * https://en.wikipedia.org/wiki/AVL_tree
@@ -34,8 +36,12 @@ private:
     using Factor = int64_t;
 
     Compare compare = Compare();
-
+#ifndef BASIC_FUNCTION
 public:
+#else
+private:
+#endif /* BASIC_FUNCTION */
+
     struct Entry {
         Key key;
         Value value;
@@ -336,6 +342,7 @@ public:
         }
     }
 
+#ifndef BASIC_FUNCTION
     /**
      * Gets the entry corresponding to the specified key; if no such entry
      * exists, returns the entry for the least key greater than the specified
@@ -573,7 +580,7 @@ public:
 
         throw NoSuchMappingException("No lower entry exists in this map");
     }
-
+#endif /* BASIC_FUNCTION */
     /**
      * Remove all entries that satisfy the filter condition.
      * @param filter
@@ -954,8 +961,86 @@ private:
     }
 };
 
-int main(int argc, char *argv[])
+#include <iostream>
+
+int main()
 {
+    AvlTreeMap<int, std::string> map;
+
+    // 测试插入
+    map.insert(1, "one");
+    map.insert(2, "two");
+    map.insert(3, "three");
+
+    // 测试大小
+    assert(map.size() == 3);
+    std::cout << "Size test passed." << std::endl;
+
+    // 测试获取值
+    assert(map.get(1) == "one");
+    assert(map.get(2) == "two");
+    assert(map.get(3) == "three");
+    std::cout << "Get test passed." << std::endl;
+
+    // 测试包含
+    assert(map.contains(1));
+    assert(map.contains(2));
+    assert(map.contains(3));
+    assert(!map.contains(4));
+    std::cout << "Contains test passed." << std::endl;
+
+    // 测试获取或默认插入
+    assert(map.getOrDefault(4) == "");
+    map.getOrDefault(4) = "four";
+    assert(map.get(4) == "four");
+    std::cout << "Get or default test passed." << std::endl;
+
+    // 测试删除
+    assert(map.remove(2));
+    assert(map.size() == 3);
+    assert(!map.contains(2));
+    std::cout << "Remove test passed." << std::endl;
+
+    // 测试删除不存在的键
+    assert(!map.remove(5));
+    std::cout << "Remove non-existent key test passed." << std::endl;
+
+    // 测试遍历
+    map.forEach([](int key, const std::string &value) {
+        std::cout << "Key: " << key << ", Value: " << value << std::endl;
+    });
+
+    // 清除所有元素
+    map.clear();
+    assert(map.empty());
+    std::cout << "Clear test passed." << std::endl;
+
+    std::cout << "All tests passed!" << std::endl;
+
+    class Stud
+    {
+        int age;
+        char name[20];
+
+    public:
+        bool operator==(const Stud &r) const noexcept
+        {
+            return this->age == r.age;
+        }
+        bool operator<(const Stud &r) const noexcept
+        {
+            return this->age < r.age;
+        }
+        bool operator!=(const Stud &r) const noexcept
+        {
+            return this->age != r.age;
+        }
+    };
+    AvlTreeMap<Stud, std::string> map2;
+    Stud a, b;
+    map2.insert(a, "a");
+    map2.insert(b, "b");
+
     return 0;
 }
 
